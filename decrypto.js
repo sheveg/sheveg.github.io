@@ -1,5 +1,7 @@
 var wordList;
 var seed = 1;
+let wordSeed = 1;
+let globalSeed = 1;
 
 function loadWordList() {
 	var wordList;
@@ -16,8 +18,7 @@ function loadWordList() {
 }
 
 function pickWords(numWords) {
-	return sampleArray(wordList, numWords);
-	//return _.sample(wordList, numWords);
+	return sampleArray(wordList, numWords, wordSeed);
 }
 
 function sampleWords(numWords) {
@@ -25,11 +26,17 @@ function sampleWords(numWords) {
 	return wordList.slice(si, si + numWords);
 }
 
-function sampleArray(arr, arrLength) {
+function sampleArray(arr, arrLength, localSeed) {
 	let returnArr = [];
 	while(returnArr.length != arrLength)
 	{
-		let randomElementIndex = Math.floor(arr.length * random());
+		let randomElementIndex = 0;
+		if(localSeed != null) {
+			randomElementIndex = Math.floor(arr.length * random(localSeed++));
+		}
+		else {
+			randomElementIndex = Math.floor(arr.length * random());
+		}
 		if(returnArr.includes(arr[randomElementIndex])) {
 			continue;
 		}
@@ -37,14 +44,21 @@ function sampleArray(arr, arrLength) {
 		returnArr.push(arr[randomElementIndex]);
 	}
 	return returnArr;
-	//let si = Math.floor(arrLength * random());
-	//return arr.slice(si, si + arrLength)
 }
 
 
-function random() {
-	var x = Math.sin(seed++) * 10000;
-	return x - Math.floor(x);
+function random(localSeed) {
+	if(localSeed != null) {
+		console.log("Taking local seed: " + localSeed.toString());
+		var x = Math.sin(localSeed) * 10000;
+		return x - Math.floor(x);
+	}
+	else {
+		console.log("Taking global seed");
+		var x = Math.sin(globalSeed++) * 10000;
+		return x - Math.floor(x);
+	}
+
 }
 
 function shuffle(array) {
@@ -67,7 +81,8 @@ function shuffle(array) {
   }
 
 function generateCode() {
-	var code = _.sample([1,2,3,4], 3);
+	//var code = _.sample([1,2,3,4], 3);
+	var code = sampleArray([1,2,3,4],3);
 	Cookies.set("code", code);
 	setCode(code);
 	$('#codeModal').modal('show');
@@ -159,7 +174,9 @@ function initialize() {
 	let url = new URL(window.location.href);
 	let s = url.searchParams.get("s").toString();
 	if(s != null) {
-		seed = s;
+		wordSeed = s;
+		globalSeed = s;
+		console.log("Seed: " + s.toString());
 	}
 
 	wordList = loadWordList();
