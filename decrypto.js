@@ -12,7 +12,7 @@ function loadWordList() {
             },
             async: false
         });
-	return shuffle(wordList);
+	return wordList;
 }
 
 function pickWords(numWords) {
