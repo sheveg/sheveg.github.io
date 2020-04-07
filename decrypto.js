@@ -20,8 +20,15 @@ function pickWords(numWords) {
 }
 
 function sampleWords(numWords) {
-	let si = Math.floor(wordList.length * Math.random());
+	let si = Math.floor(wordList.length * random());
 	return wordList.slice(si, si + numWords);
+}
+
+var seed = 1;
+
+function random() {
+	var x = Math.sin(seed++) * 10000;
+	return x - Math.floor(x);
 }
 
 function generateCode() {
