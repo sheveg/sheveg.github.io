@@ -1,4 +1,5 @@
 var wordList;
+var seed = 1;
 
 function loadWordList() {
 	var wordList;
@@ -24,8 +25,6 @@ function sampleWords(numWords) {
 	return wordList.slice(si, si + numWords);
 }
 
-var seed = 1;
-
 function random() {
 	var x = Math.sin(seed++) * 10000;
 	return x - Math.floor(x);
@@ -38,7 +37,7 @@ function shuffle(array) {
 	while (0 !== currentIndex) {
   
 	  // Pick a remaining element...
-	  randomIndex = Math.floor(Math.random() * currentIndex);
+	  randomIndex = Math.floor(random() * currentIndex);
 	  currentIndex -= 1;
   
 	  // And swap it with the current element.
