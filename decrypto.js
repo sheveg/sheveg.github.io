@@ -16,7 +16,7 @@ function loadWordList() {
 }
 
 function pickWords(numWords) {
-	return sampleWords(numWords);
+	return sampleArray(wordList, numWords);
 	//return _.sample(wordList, numWords);
 }
 
@@ -24,6 +24,23 @@ function sampleWords(numWords) {
 	let si = Math.floor(wordList.length * random());
 	return wordList.slice(si, si + numWords);
 }
+
+function sampleArray(arr, arrLength) {
+	let returnArr = [];
+	while(returnArr.length != arrLength)
+	{
+		let randomElementIndex = Math.floor(arr.length * random());
+		if(returnArr.includes(arr[randomElementIndex])) {
+			continue;
+		}
+		console.log(arr[randomElementIndex]);
+		returnArr.push(arr[randomElementIndex]);
+	}
+	return returnArr;
+	//let si = Math.floor(arrLength * random());
+	//return arr.slice(si, si + arrLength)
+}
+
 
 function random() {
 	var x = Math.sin(seed++) * 10000;
@@ -138,6 +155,12 @@ function initScreenfull() {
 
 function initialize() {
 	initScreenfull();
+
+	let url = new URL(window.location.href);
+	let s = url.searchParams.get("s").toString();
+	if(s != null) {
+		seed = s;
+	}
 
 	wordList = loadWordList();
 	loadCode();
